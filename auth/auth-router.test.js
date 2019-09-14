@@ -27,4 +27,17 @@ describe('Auth Server', () => {
         });
     });
   });
+
+  describe('POST /login', () => {
+    test('should return a JWT ', () => {
+      return request(server)
+        .post('/api/auth/login')
+        .send(user)
+        .then(res => {
+          expect(res.body).toHaveProperty('message');
+          expect(res.body).toHaveProperty('token');
+          token = res.body.token;
+        });
+    });
+  });
 });

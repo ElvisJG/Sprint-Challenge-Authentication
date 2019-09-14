@@ -2,7 +2,8 @@ const db = require('../database/dbConfig');
 
 module.exports = {
   add,
-  findBy
+  findBy,
+  findById
 };
 
 // Sets ID to await an insertion of a new user into the users DB then finds the user using the
@@ -13,7 +14,9 @@ async function add(user) {
 }
 // Using a given filter, filters users table and returns the filtered user
 async function findBy(filter) {
-  return db('users').where(filter);
+  return db('users')
+    .where(filter)
+    .first();
 }
 
 // Using a given ID, finds the ID within the users table and returns the first user found matching that ID
