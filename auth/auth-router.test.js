@@ -40,4 +40,17 @@ describe('Auth Server', () => {
         });
     });
   });
+
+  describe('GET /users', () => {
+    test('should use the token to access the protected jokes route \nand have correct response', () => {
+      return request(server)
+        .get('/api/jokes')
+        .set('Authorization', token)
+        .send(user)
+        .then(res => {
+          expect(res.status).toBe(200);
+          expect(res).toHaveProperty('text');
+        });
+    });
+  });
 });
