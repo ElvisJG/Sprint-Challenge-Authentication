@@ -18,7 +18,15 @@ describe('Auth Server', () => {
     beforeEach(async () => {
       await db('users').truncate();
     });
-    test('should returns status 201', () => {
+    test('no password, should return status 500', () => {
+      return request(server)
+        .post('/api/auth/register')
+        .send(user.username)
+        .then(res => {
+          expect(res.status).toBe(500);
+        });
+    });
+    test('username and pass provided, \nshould returns status 201', () => {
       return request(server)
         .post('/api/auth/register')
         .send(user)
@@ -39,6 +47,19 @@ describe('Auth Server', () => {
           token = res.body.token;
         });
     });
+    test('incorrect pass supplied, should return status 402', () => {
+      const incorrectUser = {
+        username: 'testuser',
+        password:
+          'asfbasifb0iqbw0ib1w0ibfan0ifa0fbasuifb0b120ibf10un10ifbw0sbfi0nbu3bf-1nifna'
+      };
+      return request(server)
+        .post('/api/auth/login')
+        .send(incorrectUser)
+        .then(res => {
+          expect(res.status).toBe(401);
+        });
+    });
   });
 
   describe('GET /users', () => {
@@ -50,6 +71,15 @@ describe('Auth Server', () => {
         .then(res => {
           expect(res.status).toBe(200);
           expect(res).toHaveProperty('text');
+        });
+    });
+    test('no token, should be denied access to the route', () => {
+      return request(server)
+        .get('/api/jokes')
+        .send(user)
+        .then(res => {
+          expect(res.status).toBe(400);
+          expect(res.text).toBe('{"message":"No token provided"}');
         });
     });
   });
