@@ -2,6 +2,10 @@ const Users = require('./user-model.js');
 const db = require('../database/dbConfig.js');
 
 describe('The Users Model', () => {
+  test('tests are running with DB_ENV set to testing', () => {
+    expect(process.env.DB_ENV).toBe('testing');
+  });
+
   const userData = {
     username: 'testuser',
     password: '1qaz@WSX3edc$RFV'
